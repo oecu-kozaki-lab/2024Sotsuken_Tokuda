@@ -1,0 +1,16 @@
+http://ja.dbpedia.org/resource/難聴	<http://ja.dbpedia.org/resource/メニエール病> ; <http://ja.dbpedia.org/resource/ヒステリー> . 
+
+http://ja.dbpedia.org/resource/アルコール依存症	<http://ja.dbpedia.org/resource/アルコール離脱症候群> ; <http://ja.dbpedia.org/resource/マロリー・ワイス症候群> ; <http://ja.dbpedia.org/resource/嘔吐> ; <http://ja.dbpedia.org/resource/失見当識> ; <http://ja.dbpedia.org/resource/失調> ; <http://ja.dbpedia.org/resource/妄想> ; <http://ja.dbpedia.org/resource/意識障害> ; <http://ja.dbpedia.org/resource/振戦せん妄> ; <http://ja.dbpedia.org/resource/炎症> ; <http://ja.dbpedia.org/resource/発作> ; <http://ja.dbpedia.org/resource/腹水> ; <http://ja.dbpedia.org/resource/認知症> ; <http://ja.dbpedia.org/resource/高血圧> ; <http://ja.dbpedia.org/resource/黄疸> . 
+
+http://ja.dbpedia.org/resource/中枢神経限局性血管炎	<http://ja.dbpedia.org/resource/片頭痛> ; <http://ja.dbpedia.org/resource/炎症> . 
+
+http://ja.dbpedia.org/resource/脳炎	<http://ja.dbpedia.org/resource/発熱> ; <http://ja.dbpedia.org/resource/意識障害> ; <http://ja.dbpedia.org/resource/浮腫> ; <http://ja.dbpedia.org/resource/炎症> ; <http://ja.dbpedia.org/resource/痙攣> ; <http://ja.dbpedia.org/resource/頭痛> ; <http://ja.dbpedia.org/resource/髄膜刺激症状> ; <http://ja.dbpedia.org/resource/髄膜炎> ; <http://ja.dbpedia.org/resource/麻痺> . 
+
+http://ja.dbpedia.org/resource/狭心症	<http://ja.dbpedia.org/resource/C反応性蛋白> ; <http://ja.dbpedia.org/resource/放散痛> ; <http://ja.dbpedia.org/resource/頭痛> ; <http://ja.dbpedia.org/resource/動悸> ; <http://ja.dbpedia.org/resource/呼吸困難> ; <http://ja.dbpedia.org/resource/嘔吐> ; <http://ja.dbpedia.org/resource/攣縮> ; <http://ja.dbpedia.org/resource/肥満> ; <http://ja.dbpedia.org/resource/高血圧> . 
+
+http://ja.dbpedia.org/resource/尿路結石	<http://ja.dbpedia.org/resource/ストルバイト> ; <http://ja.dbpedia.org/resource/痛み> ; <http://ja.dbpedia.org/resource/結石> ; <http://ja.dbpedia.org/resource/肥満> ; <http://ja.dbpedia.org/resource/胆石> ; <http://ja.dbpedia.org/resource/膀胱結石> . 
+
+http://ja.dbpedia.org/resource/精神障害	<http://ja.dbpedia.org/resource/抑うつ> ; <http://ja.dbpedia.org/resource/認知症> ; <http://ja.dbpedia.org/resource/妄想> ; <http://ja.dbpedia.org/resource/髄膜炎> . 
+
+http://ja.dbpedia.org/resource/天然痘	<http://ja.dbpedia.org/resource/出血熱> ; <http://ja.dbpedia.org/resource/呼吸不全> ; <http://ja.dbpedia.org/resource/呼吸困難> ; <http://ja.dbpedia.org/resource/瘢痕> ; <http://ja.dbpedia.org/resource/腰痛> ; <http://ja.dbpedia.org/resource/頭痛> . 
+

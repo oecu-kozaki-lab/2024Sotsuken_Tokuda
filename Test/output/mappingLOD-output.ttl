@@ -1,0 +1,7 @@
+鼻骨骨折	<http://ja.dbpedia.org/resource/鼻血> . 
+鼻血	<http://ja.dbpedia.org/resource/出血> ; <http://ja.dbpedia.org/resource/炎症> ; <http://ja.dbpedia.org/resource/貧血> ; <http://ja.dbpedia.org/resource/高血圧> . 
+鼻石	<http://ja.dbpedia.org/resource/結石> . 
+鼻炎	<http://ja.dbpedia.org/resource/アレルギー> ; <http://ja.dbpedia.org/resource/炎症> ; <http://ja.dbpedia.org/resource/風邪> . 
+鼻ほじり	<http://ja.dbpedia.org/resource/鼻水> ; <http://ja.dbpedia.org/resource/鼻血> . 
+鼠径リンパ肉芽腫	<http://ja.dbpedia.org/resource/発熱> ; <http://ja.dbpedia.org/resource/頭痛> ; <http://ja.dbpedia.org/resource/潰瘍> . 
+難聴	<http://ja.dbpedia.org/resource/ヒステリー> ; <http://ja.dbpedia.org/resource/メニエール病> . 
