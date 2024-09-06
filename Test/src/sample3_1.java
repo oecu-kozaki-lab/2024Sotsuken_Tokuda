@@ -22,7 +22,7 @@ public class sample3_1 {
 
         try {
             // 入力ファイル指定
-            File file = new File("input/disease7_16_2.txt");
+            File file = new File("input/disease7_19.txt");
             // ファイルの読み込み用のReaderの設定
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
 
@@ -79,7 +79,7 @@ public class sample3_1 {
                             if (rs.hasNext()) {
                                 bw.write(" ; ");
                             } else {
-                                bw.write(" . \n\n");
+                                bw.write(" . \n");
                             }
                             n++;
                         }
