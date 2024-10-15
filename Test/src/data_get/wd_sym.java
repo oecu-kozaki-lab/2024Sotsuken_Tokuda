@@ -36,7 +36,7 @@ public class wd_sym {
                                   "PREFIX wikibase: <http://wikiba.se/ontology#> " +
                                   "PREFIX bd: <http://www.bigdata.com/rdf#> " +
                                   "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-                                  "SELECT DISTINCT ?dis ?disLabel ?sym ?symLabel" +
+                                  "SELECT DISTINCT ?dis ?disLabel ?sym ?symLabel " +
                                   "WHERE {" +
                                   "?dis wdt:P494 ?o ."  +       // ?dis（疾患）にP494のプロパティを持つもの
                                   "?dis wdt:P780 ?sym . "  +     // ?dis（疾患）にP780（症状）プロパティを持つもの
@@ -44,7 +44,7 @@ public class wd_sym {
                                   "?sym rdfs:label ?symLabel . " +// 症状のラベルを取得
                                   "FILTER (lang(?disLabel) = 'ja') "+ // 症状のラベルは日本語のみ
                                   "FILTER (lang(?symLabel) = 'ja') "+ // 症状のラベルは日本語のみ
-                                  "SERVICE wikibase:label { bd:serviceParam wikibase:language '[AUTO_LANGUAGE],ja'. }"+
+                                  //"SERVICE wikibase:label { bd:serviceParam wikibase:language '[AUTO_LANGUAGE],ja'. }"+
                                   "}"+
                                   "ORDER BY DESC(?disLabel)" ;     
         
@@ -65,12 +65,12 @@ public class wd_sym {
                 QuerySolution qsWikidata = rsWikidata.next();
                 String dis = qsWikidata.get("dis").toString();
                 dis =dis.replace("http://www.wikidata.org/entity/", "wd:");
-                //String disLabel = qsWikidata.getLiteral("disLabel").getString();
+                String disLabel = qsWikidata.getLiteral("disLabel").getString();
                 String sym = qsWikidata.get("sym").toString();
                 sym =sym.replace("http://www.wikidata.org/entity/", "wd:");
-                //String symLabel = qsWikidata.getLiteral("symLabel").getString();
-                //bw.write (dis+" rdfs:label \""+disLabel+"\"@ja .\n");
-                //bw.write (sym+" rdfs:label \""+symLabel+"\"@ja .\n");
+                String symLabel = qsWikidata.getLiteral("symLabel").getString();
+                bw.write (dis+" rdfs:label \""+disLabel+"\"@ja .\n");
+                bw.write (sym+" rdfs:label \""+symLabel+"\"@ja .\n");
                 bw.write (dis+" wd:P780 "+sym+" .\n");
             }
          }

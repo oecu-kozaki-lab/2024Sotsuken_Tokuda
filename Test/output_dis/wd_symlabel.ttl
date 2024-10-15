@@ -358,8 +358,8 @@ wd:Q166019 rdfs:label "出血"@ja .
 wd:Q2361887 rdfs:label "内出血"@ja .
 wd:Q845224 rdfs:label "全般性不安障害"@ja .
 wd:Q727096 rdfs:label "先天性疾患"@ja .
-wd:Q2610154 rdfs:label "充血"@ja .
 wd:Q948806 rdfs:label "充血"@ja .
+wd:Q2610154 rdfs:label "充血"@ja .
 wd:Q11072 rdfs:label "健忘"@ja .
 wd:Q2673323 rdfs:label "倦怠感"@ja .
 wd:Q178436 rdfs:label "便秘"@ja .
