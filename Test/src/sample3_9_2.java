@@ -23,12 +23,12 @@ public class sample3_9_2 {
     static public void main(String[] args) throws Exception {
 
         // 入力ファイル指定
-        File file = new File("input/disease8_5_2.txt");
+        File file = new File("input/disease7_19.txt");
         // ファイルの読み込み用のReaderの設定
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
 
         // 出力ファイル指定
-        File fileOUT = new File("output/classification3-output.ttl");
+        File fileOUT = new File("output/wikidataP31-output.ttl");
         // 出力用のファイルのWriterの設定
         FileOutputStream out = new FileOutputStream(fileOUT);
         OutputStreamWriter ow = new OutputStreamWriter(out, "UTF-8");

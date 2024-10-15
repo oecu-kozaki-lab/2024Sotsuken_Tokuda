@@ -49,7 +49,7 @@ public class sample3_10 {
                                   "SELECT DISTINCT ?wikiPage " +
                                   "WHERE { " +
                                   "<" + line + "> dbo:wikiPageWikiLink ?wikiPage1 . " +
-                                  "?wikiPage owl:sameAs ?wikiPage1  ."+
+                                  "?wikiPage owl:sameAs ?wikiPage1 ."+
                                   "}";
 
                 // クエリの実行

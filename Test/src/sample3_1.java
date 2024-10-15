@@ -47,8 +47,6 @@ public class sample3_1 {
                                   "PREFIX dbpedia-ja:<http://ja.dbpedia.org/resource/> " +
                                   "SELECT DISTINCT ?wikiPage " +
                                   "WHERE { " +
-                                  //"?subject rdfs:label \"" + line + "\"@ja . " +
-                                  //"?subject dbo:wikiPageWikiLink ?wikiPage . " +
                                   "<" + line + "> dbo:wikiPageWikiLink ?wikiPage ."+
                                   "?wikiPage dct:subject|dct:subject/skos:broader dbpedia-ja:Category:症状と徴候 . " +
                                   "}";
@@ -77,7 +75,7 @@ public class sample3_1 {
                             bw.write("<" + res.toString() + ">");
                             // 症状が複数の場合は，「;」でつなぐ．最後は「.」
                             if (rs.hasNext()) {
-                                bw.write(" ; ");
+                                bw.write(" ; \n");
                             } else {
                                 bw.write(" . \n");
                             }

@@ -1,0 +1,126 @@
+http://ja.dbpedia.org/resource/難聴
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/血腫
+  - http://www.wikidata.org/entity/Q193078 (外傷)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/内出血
+  - http://www.wikidata.org/entity/Q2057971 (健康問題)
+http://ja.dbpedia.org/resource/出血
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+http://ja.dbpedia.org/resource/痣
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+  - http://www.wikidata.org/entity/Q17300291 (漢字の文字)
+  - http://www.wikidata.org/entity/Q53764782 (日本の漢字の文字)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/幻覚
+  - http://www.wikidata.org/entity/Q21191270 (テレビシリーズのエピソード)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+  - http://www.wikidata.org/entity/Q7889 (コンピュータゲーム)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/耳鳴り
+  - http://www.wikidata.org/entity/Q2057971 (健康問題)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+http://ja.dbpedia.org/resource/錯覚
+http://ja.dbpedia.org/resource/光視症
+http://ja.dbpedia.org/resource/眼閃
+http://ja.dbpedia.org/resource/幻聴
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/悪液質
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/低タンパク血症
+  - http://www.wikidata.org/entity/Q1441305 (臨床徴候)
+  - http://www.wikidata.org/entity/Q54928607 (異常低値)
+http://ja.dbpedia.org/resource/粘液水腫
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+http://ja.dbpedia.org/resource/脱毛
+http://ja.dbpedia.org/resource/萎縮
+  - http://www.wikidata.org/entity/Q12136 (病気)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/変形性膝関節症
+  - http://www.wikidata.org/entity/Q4941552 (骨疾患)
+  - http://www.wikidata.org/entity/Q708176 (関節症)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+  - http://www.wikidata.org/entity/Q12136 (病気)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/炎症
+  - http://www.wikidata.org/entity/Q5633421 (科学学術雑誌)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+http://ja.dbpedia.org/resource/関節炎
+  - http://www.wikidata.org/entity/Q708176 (関節症)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/歯周病
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/歯肉肥大
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/性器ヘルペス
+  - http://www.wikidata.org/entity/Q18123741 (感染症)
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/潰瘍
+  - http://www.wikidata.org/entity/Q4167410 (ウィキメディアの曖昧さ回避ページ)
+  - http://www.wikidata.org/entity/Q15623926 (Q15623926)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+http://ja.dbpedia.org/resource/無症候性キャリア
+  - http://www.wikidata.org/entity/Q87196907 (生物学用語)
+http://ja.dbpedia.org/resource/水泡
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/特定不能の広汎性発達障害
+  - http://www.wikidata.org/entity/Q12136 (病気)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/自閉症
+  - http://www.wikidata.org/entity/Q6691991 (広汎性発達障害)
+  - http://www.wikidata.org/entity/Q12131 (障害)
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+  - http://www.wikidata.org/entity/Q112234259 (起源や出所の種類)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/代謝異常
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/体重減少
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+  - http://www.wikidata.org/entity/Q1441305 (臨床徴候)
+http://ja.dbpedia.org/resource/発作
+  - http://www.wikidata.org/entity/Q486972 (集落)
+http://ja.dbpedia.org/resource/黄疸
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+  - http://www.wikidata.org/entity/Q1441305 (臨床徴候)
+http://ja.dbpedia.org/resource/無気力
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/脳血管障害
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
+http://ja.dbpedia.org/resource/出血
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+http://ja.dbpedia.org/resource/炎症
+  - http://www.wikidata.org/entity/Q5633421 (科学学術雑誌)
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+http://ja.dbpedia.org/resource/虚血
+  - http://www.wikidata.org/entity/Q112965645 (症状又は徴候)
+  - http://www.wikidata.org/entity/Q112193867 (病気のクラス)
+http://ja.dbpedia.org/resource/圧排
+
+  - http://www.wikidata.org/entity/Q29654788 (Unicode文字)
