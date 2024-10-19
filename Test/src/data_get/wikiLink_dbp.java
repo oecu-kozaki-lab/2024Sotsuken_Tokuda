@@ -21,7 +21,7 @@ public class wikiLink_dbp {
     static public void main(String[] args) throws Exception {
 
         // 出力ファイル指定
-        File fileOUT = new File("output_dis/db.ttl");
+        File fileOUT = new File("output_dis/wikiLink_dbp.ttl");
         // 出力用のファイルのWriterの設定
         FileOutputStream out = new FileOutputStream(fileOUT);
         OutputStreamWriter ow = new OutputStreamWriter(out, "UTF-8");

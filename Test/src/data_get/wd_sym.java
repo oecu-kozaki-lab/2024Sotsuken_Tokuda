@@ -44,7 +44,7 @@ public class wd_sym {
                                   "?sym rdfs:label ?symLabel . " +// 症状のラベルを取得
                                   "FILTER (lang(?disLabel) = 'ja') "+ // 症状のラベルは日本語のみ
                                   "FILTER (lang(?symLabel) = 'ja') "+ // 症状のラベルは日本語のみ
-                                  //"SERVICE wikibase:label { bd:serviceParam wikibase:language '[AUTO_LANGUAGE],ja'. }"+
+                                  "SERVICE wikibase:label { bd:serviceParam wikibase:language '[AUTO_LANGUAGE],ja'. }"+
                                   "}"+
                                   "ORDER BY DESC(?disLabel)" ;     
         
@@ -58,7 +58,8 @@ public class wd_sym {
 
             ResultSet rsWikidata = executeWithRetry(qexecWikidata);
             bw.write ("@prefix wd: <http://www.wikidata.org/entity/> .\n"
-            		+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n");
+            		+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+            		+ "@prefix wdt: <http://www.wikidata.org/prop/direct/> .\n");
             
             //bw.write(line + "\n");
             while (rsWikidata.hasNext()) {
@@ -71,7 +72,7 @@ public class wd_sym {
                 String symLabel = qsWikidata.getLiteral("symLabel").getString();
                 bw.write (dis+" rdfs:label \""+disLabel+"\"@ja .\n");
                 bw.write (sym+" rdfs:label \""+symLabel+"\"@ja .\n");
-                bw.write (dis+" wd:P780 "+sym+" .\n");
+                bw.write (dis+" wdt:P780 "+sym+" .\n");
             }
          }
          
