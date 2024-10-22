@@ -1,4 +1,6 @@
 
+wikipedia
+
 http://ja.dbpedia.org/resource/難聴
   - http://www.wikidata.org/entity/Q223254 (中耳炎)
   - http://www.wikidata.org/entity/Q176741 (流行性耳下腺炎)
@@ -7,3 +9,35 @@ http://ja.dbpedia.org/resource/難聴
   - http://www.wikidata.org/entity/Q155857 (風疹)
   - http://www.wikidata.org/entity/Q68833 (骨折)
   - http://www.wikidata.org/entity/Q79793 (麻疹)
+
+http://ja.dbpedia.org/resource/血腫
+  - http://www.wikidata.org/entity/Q166019 (出血)
+  - http://www.wikidata.org/entity/Q574491 (打ち身)
+
+http://ja.dbpedia.org/resource/幻覚
+  - http://www.wikidata.org/entity/Q160796 (せん妄)
+  - http://www.wikidata.org/entity/Q15326 (アルコール依存症)
+  - http://www.wikidata.org/entity/Q117121 (肝レンズ核変性症)
+  - http://www.wikidata.org/entity/Q1485 (全身性エリテマトーデス)
+  - http://www.wikidata.org/entity/Q8277 (多発性硬化症)
+  - http://www.wikidata.org/entity/Q189643 (妄想)
+  - http://www.wikidata.org/entity/Q209647 (振戦せん妄)
+  - http://www.wikidata.org/entity/Q38933 (発熱)
+  - http://www.wikidata.org/entity/Q170082 (精神病)
+  - http://www.wikidata.org/entity/Q192309 (耳鳴り)
+  - http://www.wikidata.org/entity/Q12202 (脳卒中)
+  - http://www.wikidata.org/entity/Q199615 (脳炎)
+  - http://www.wikidata.org/entity/Q83030 (認知症)
+
+http://ja.dbpedia.org/resource/悪液質
+  - http://www.wikidata.org/entity/Q568378 (羸痩)
+  - http://www.wikidata.org/entity/Q29496 (白血病)
+
+http://ja.dbpedia.org/resource/変形性膝関節症
+  - http://www.wikidata.org/entity/Q11429729 (変形性股関節症)
+  - http://www.wikidata.org/entity/Q101991 (炎症)
+  - http://www.wikidata.org/entity/Q133087 (痛風)
+  - http://www.wikidata.org/entity/Q12174 (肥満)
+  - http://www.wikidata.org/entity/Q187255 (関節リウマチ)
+  - http://www.wikidata.org/entity/Q170990 (関節炎)
+  - http://www.wikidata.org/entity/Q683498 (関節痛)
