@@ -21,7 +21,7 @@ public class 上位クラス_dbp {
     static public void main(String[] args) throws Exception {
 
         // 出力ファイル指定
-        File fileOUT = new File("output_dis/上位クラス_db.ttl");
+        File fileOUT = new File("output_dis/上位クラス_dbp.ttl");
         // 出力用のファイルのWriterの設定
         FileOutputStream out = new FileOutputStream(fileOUT);
         OutputStreamWriter ow = new OutputStreamWriter(out, "UTF-8");
@@ -45,13 +45,15 @@ public class 上位クラス_dbp {
         try (QueryExecution qexecWikidata = QueryExecutionHTTP.create()
                 .endpoint("https://query.wikidata.org/sparql")
                 .query(wikidataQuery)
-                .param("timeout", "10000")
+                .param("timeout", "60000")
                 .build()) {
 
             ResultSet rsWikidata = executeWithRetry(qexecWikidata);
             bw.write ("@prefix owl: <http://www.w3.org/2002/07/owl#> .\n"
             		+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
-            		+ "@prefix dis_p: <https://hozo.jp/dis/prop/> .\n");
+            		+ "@prefix dis_p: <https://hozo.jp/dis/prop/> .\n"
+            		+ "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
+            		+ "@prefix dis_e: <https://hozo.jp/dis/entity/> .\n");
             
             while (rsWikidata.hasNext()) {
                 QuerySolution qsWikidata = rsWikidata.next();
@@ -89,7 +91,7 @@ public class 上位クラス_dbp {
                 try (QueryExecution qexec = QueryExecutionHTTP.create()
                         .endpoint("https://ja.dbpedia.org/sparql/")
                         .query(dbpediaQuery)
-                        .param("timeout", "10000")
+                        .param("timeout", "60000")
                         .build()) {
             
                 	ResultSet rsDBpedia = executeWithRetry(qexec);
@@ -109,6 +111,8 @@ public class 上位クラス_dbp {
                         bw.write("<" + disName + "> owl:sameAs <" + wikipedia + "> .\n"
                         		+ "<" + symName + "> owl:sameAs <" + wikiPage + "> .\n"
                         		+ "<" +disName+"> dis_p:sym <" +symName + "> .\n" 
+                        		+"<" +disName+"> rdf:type dis_e:dis .\n"
+                                +"<" +symName+"> rdf:type dis_e:sym .\n"
                         		+ "<" +disName+"> rdfs:label \"" + disLabel + "\"@ja .\n" 
                         		+ "<" +symName + "> rdfs:label \"" + symLabel + "\"@ja .\n") ;
                         

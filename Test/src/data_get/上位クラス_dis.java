@@ -57,7 +57,9 @@ public class 上位クラス_dis {
             ResultSet rsWikidata = executeWithRetry(qexecWikidata);
             bw.write ("@prefix wd: <http://www.wikidata.org/entity/> .\n"
             		+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
-            		+ "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n");
+            		+ "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n"
+            		+ "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
+            		+ "@prefix dis_e: <https://hozo.jp/dis/entity/> .\n");
             
             while (rsWikidata.hasNext()) {
                 QuerySolution qsWikidata = rsWikidata.next();
@@ -67,6 +69,7 @@ public class 上位クラス_dis {
                 String disLabel = qsWikidata.getLiteral("disLabel").getString();
                 bw.write (dis+" rdfs:label \""+disLabel+"\"@ja .\n"
                 		+ "<" + dis_d + "> rdfs:label \""+disLabel+"\"@ja .\n"
+                		+"<" +dis_d+"> rdf:type dis_e:dis .\n"
                 		+"<" + dis_d+ "> owl:sameAs " + dis + " .\n");
             }
          }

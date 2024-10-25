@@ -60,7 +60,9 @@ public class 上位クラス_wd {
             bw.write ("@prefix wd: <http://www.wikidata.org/entity/> .\n"
             		+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
             		+ "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n"
-            		+ "@prefix dis_p: <https://hozo.jp/dis/prop/> .\n");
+            		+ "@prefix dis_p: <https://hozo.jp/dis/prop/> .\n"
+            		+ "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
+            		+ "@prefix dis_e: <https://hozo.jp/dis/entity/> .\n");
             
             //bw.write(line + "\n");
             while (rsWikidata.hasNext()) {
@@ -77,7 +79,9 @@ public class 上位クラス_wd {
                 bw.write ("<" + dis_s + "> rdfs:label \""+symLabel+"\"@ja .\n");
                 bw.write ("<" + dis_d + "> dis_p:sym <"+ dis_s + "> .\n");
                 bw.write ("<" + dis_d+ "> owl:sameAs " + dis + " .\n"
-                		+ "<" + dis_s+ "> owl:sameAs " + sym + " .\n");
+                		+ "<" + dis_s+ "> owl:sameAs " + sym + " .\n"
+                		+"<" +dis_d+"> rdf:type dis_e:dis .\n"
+                		+"<" +dis_s+"> rdf:type dis_e:sym .\n");
                 
             }
          }

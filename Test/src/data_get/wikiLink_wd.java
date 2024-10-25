@@ -21,7 +21,7 @@ public class wikiLink_wd {
     static public void main(String[] args) throws Exception {
 
         // 出力ファイル指定
-        File fileOUT = new File("output_dis/wikiLink_wd.ttl");
+        File fileOUT = new File("output_dis/wikiLink_wd_test.ttl");
         // 出力用のファイルのWriterの設定
         FileOutputStream out = new FileOutputStream(fileOUT);
         OutputStreamWriter ow = new OutputStreamWriter(out, "UTF-8");
@@ -42,14 +42,16 @@ public class wikiLink_wd {
         try (QueryExecution qexecWikidata = QueryExecutionHTTP.create()
                 .endpoint("https://query.wikidata.org/sparql")
                 .query(wikidataQuery)
-                .param("timeout", "60000")
+                .param("timeout", "120000")
                 .build()) {
 
             ResultSet rsWikidata = executeWithRetry(qexecWikidata);
             bw.write ("@prefix owl: <http://www.w3.org/2002/07/owl#> .\n"
             		+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
             		+ "@prefix dis_p: <https://hozo.jp/dis/prop/> .\n"
-            		+ "@prefix wikiLink_wd: <https://hozo.jp/dis/prop/wikiLink/wd/> .\n");
+            		+ "@prefix wikiLink_wd: <https://hozo.jp/dis/prop/wikiLink/wd/> .\n"
+            		+ "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
+            		+ "@prefix dis_e: <https://hozo.jp/dis/entity/> .\n");
             
             while (rsWikidata.hasNext()) {
                 QuerySolution qsWikidata = rsWikidata.next();
@@ -88,11 +90,11 @@ public class wikiLink_wd {
                         QuerySolution qs = rsDBpedia.next();
                         //Resource wikiPage = qs.getResource("wikiPage");
                         Resource symID = qs.getResource("symID");
-                        //Resource disID = qs.getResource("disID");
+                        Resource disID = qs.getResource("disID");
                         //String disLabel = qs.getLiteral("disLabel").getString();
                         //String symLabel = qs.getLiteral("symLabel").getString();
-                        //String disUri = disID.toString();
-                        //String disName = disUri.replace("http://wikidata.dbpedia.org/resource/", "https://hozo.jp/dis/disease/");
+                        String disUri = disID.toString();
+                        String disName = disUri.replace("http://wikidata.dbpedia.org/resource/", "https://hozo.jp/dis/disease/");
                         //String symUri = symID.toString();
                         //String symName = symUri.replace("http://wikidata.dbpedia.org/resource/", "http://www.wikidata.org/entity/");
                         
@@ -126,7 +128,7 @@ public class wikiLink_wd {
                             try (QueryExecution qexecWikidata2 = QueryExecutionHTTP.create()
                                     .endpoint("https://query.wikidata.org/sparql")
                                     .query(wikidataQuery2)
-                                    .param("timeout", "60000")
+                                    .param("timeout", "120000")
                                     .build()) {
 
                                 ResultSet rsWikidata2 = executeWithRetry(qexecWikidata2);
@@ -137,12 +139,14 @@ public class wikiLink_wd {
                                     QuerySolution qsWikidata2 = rsWikidata2.next();
                                     Resource item = qsWikidata2.getResource("item");
                                     String itemLabel = qsWikidata2.getLiteral("itemLabel").getString();
-                                    String disName = wikipedia.replace("http://ja.dbpedia.org/resource/", "https://hozo.jp/dis/disease/");
+                                    //String disName = wikipedia.replace("http://ja.dbpedia.org/resource/", "https://hozo.jp/dis/disease/");
                                     String symName = symUri.replace("http://wikidata.dbpedia.org/resource/", "https://hozo.jp/dis/symptom/");
                                     bw.write( "<" +wikipedia+"> wikiLink_wd:sym <" + item + "> .\n"
                                     		+ "<" +item + "> rdfs:label \"" + itemLabel + "\"@ja .\n"
                                     		+"<" +disName+"> dis_p:sym <" +symName + "> .\n"
-                                    		+"<" +symName+"> dis_p:sym <" +item + "> .\n"
+                                    		+"<" +disName+"> rdf:type dis_e:dis .\n"
+                                    		+"<" +symName+"> rdf:type dis_e:sym .\n"
+                                    		+"<" +symName+"> owl:sameAs <" +item + "> .\n"
                                     		+"<" +symName + "> rdfs:label \"" + itemLabel + "\"@ja .\n") ;
                                 }
                             }
