@@ -28,14 +28,21 @@ public class wikiLink_dbp {
         BufferedWriter bw = new BufferedWriter(ow);
 
         // WikidataのSPARQLクエリの作成
-        String wikidataQueryStr = "PREFIX wdt: <http://www.wikidata.org/prop/direct/> " +
-        						  "PREFIX schema: <http://schema.org/> " +
-                                  "SELECT DISTINCT ?wikipedia "+
+        String wikidataQueryStr = "PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> " +
+        						  "PREFIX wdt: <http://www.wikidata.org/prop/direct/> " +
+        						  "PREFIX wd: <http://www.wikidata.org/entity/> " +
+                                  "PREFIX schema: <http://schema.org/> " +
+                                  "PREFIX bd: <http://www.bigdata.com/rdf#> " +
+                                  "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+                                  "SELECT DISTINCT ?dis ?disLabel "+
                                   "WHERE {" +
-                                  "?dis wdt:P494 ?o ."  +   
+                                  "?dis wdt:P494 ?o ."  +       // ?dis（疾患）にP494のプロパティを持つもの
                                   "?wikipedia schema:about ?dis ;" +
                                   "			  schema:isPartOf <https://ja.wikipedia.org/> ." +
-                                  "}";     
+                                  "?dis rdfs:label ?disLabel ." +
+                                  "FILTER (lang(?disLabel) = 'ja') "+
+                                  "}"+
+                                  "ORDER BY DESC(?dis)" ;  
         
         // Wikidataのクエリの実行
         Query wikidataQuery = QueryFactory.create(wikidataQueryStr);
@@ -52,9 +59,9 @@ public class wikiLink_dbp {
             
             while (rsWikidata.hasNext()) {
                 QuerySolution qsWikidata = rsWikidata.next();
-                String wikipedia = qsWikidata.get("wikipedia").toString();
-                wikipedia = URLDecoder.decode(wikipedia, "UTF-8");
-                wikipedia =wikipedia.replace("https://ja.wikipedia.org/wiki/", "http://ja.dbpedia.org/resource/");
+                String dis = qsWikidata.get("dis").toString();
+                dis = URLDecoder.decode(dis, "UTF-8");
+                String wikipedia = dis.replace("http://www.wikidata.org/entity/", "http://wikidata.dbpedia.org/resource/");
                 //bw.write (wikipedia+"\n");
                 
                 // DBpediaのクエリの作成
@@ -64,15 +71,20 @@ public class wikiLink_dbp {
                                          "PREFIX dct:<http://purl.org/dc/terms/> " +
                                          "PREFIX skos:<http://www.w3.org/2004/02/skos/core#> " +
                                          "PREFIX dbpedia-ja:<http://ja.dbpedia.org/resource/> " +
-                                         "SELECT ?wikiPage ?disLabel ?symLabel ?symID ?disID " +
+                                         "SELECT ?dis ?wikiPage ?disLabel ?symLabel ?symID ?disID " +
                                          "WHERE { " +
-                                         "<" + wikipedia + "> dbo:wikiPageWikiLink ?wikiPage . " +
-                                         "<" + wikipedia + "> rdfs:label ?disLabel . " +
+                                         "<" + wikipedia + "> owl:sameAs ?dis ." +
+                                         "FILTER(contains(str(?dis),\"http://ja.dbpedia.org/\"))" +
+                                         "?dis dbo:wikiPageWikiLink ?wikiPage . " +
+                                         "?dis rdfs:label ?disLabel . " +
                                          "FILTER (STRLEN(STR(?disLabel)) > 0)" +
                                          "?wikiPage dct:subject|dct:subject/skos:broader dbpedia-ja:Category:症状と徴候 ."+
                                          "?wikiPage rdfs:label ?symLabel . "+
+                                         "FILTER (STRLEN(STR(?symLabel)) > 0)" +
+                                         "OPTIONAL{ " +
                                          "?symID owl:sameAs ?wikiPage  ."+
-                                         "?disID owl:sameAs <" + wikipedia + "> ."+
+                                         "} "+
+                                         "?disID owl:sameAs ?dis ."+
                                          "}";
                 
              // DBpediaのクエリの実行
@@ -85,67 +97,29 @@ public class wikiLink_dbp {
             
                 	ResultSet rsDBpedia = executeWithRetry(qexec);
                 	
-                	while (rsDBpedia.hasNext()) {
+                    while (rsDBpedia.hasNext()) {
                         QuerySolution qs = rsDBpedia.next();
+                        Resource disP = qs.getResource("dis");
                         Resource wikiPage = qs.getResource("wikiPage");
                         Resource symID = qs.getResource("symID");
                         Resource disID = qs.getResource("disID");
                         String disLabel = qs.getLiteral("disLabel").getString();
                         String symLabel = qs.getLiteral("symLabel").getString();
-                        String disUri = disID.toString();
+
+                        // Convert URIs
+                        String disUri = disID != null ? disID.toString() : "";
                         String disName = disUri.replace("http://wikidata.dbpedia.org/resource/", "http://www.wikidata.org/entity/");
-                        String symUri = symID.toString();
+                        String symUri = symID != null ? symID.toString() : "";
                         String symName = symUri.replace("http://wikidata.dbpedia.org/resource/", "http://www.wikidata.org/entity/");
-                        
-                        bw.write("<" +wikipedia+"> owl:sameAs <" + disName + "> .\n"
-                        		+ "<" +wikiPage + "> owl:sameAs <" + symName + "> .\n"
-                        		+ "<" +wikipedia+"> wikiLink_dbp:sym " + "<" +wikiPage + "> .\n" 
-                        		+ "<" +wikipedia+"> rdfs:label \"" + disLabel + "\"@ja .\n" 
-                        		+ "<" +wikiPage + "> rdfs:label \"" + symLabel + "\"@ja .\n") ;
-                        
-                        
-                        /*
-                        if (symID != null) {
-                        	String symUri2 = symID.toString();
-                            String wikiPageName = symUri2.replace("http://wikidata.dbpedia.org/resource/", "");
-                            
-                            // WikidataのSPARQLクエリの作成
-                            String wikidataQueryStr2 ="PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> " +
-                            						  "PREFIX wdt: <http://www.wikidata.org/prop/direct/> " +
-                            						  "PREFIX wd: <http://www.wikidata.org/entity/> " +
-                                                      "PREFIX wikibase: <http://wikiba.se/ontology#> " +
-                                                      "PREFIX bd: <http://www.bigdata.com/rdf#> " +
-                                                      "SELECT DISTINCT ?item ?itemLabel " +
-                                                      "WHERE { " +
-                                                      "BIND(wd:" + wikiPageName + " as ?item)" +
-                                                      "?item wdt:P31 wd:Q112965645 . " +
-                                                      "SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],ja\". } " +
-                                                      "}";
 
-                            // Wikidataのクエリの実行
-                            Query wikidataQuery2 = QueryFactory.create(wikidataQueryStr2);
-                            try (QueryExecution qexecWikidata2 = QueryExecutionHTTP.create()
-                                    .endpoint("https://query.wikidata.org/sparql")
-                                    .query(wikidataQuery2)
-                                    .param("timeout", "10000")
-                                    .build()) {
-
-                                ResultSet rsWikidata2 = executeWithRetry(qexecWikidata2);
-
-                                //bw.write(line + "\n");
-                                
-                                while (rsWikidata2.hasNext()) {
-                                    QuerySolution qsWikidata2 = rsWikidata2.next();
-                                    Resource item = qsWikidata2.getResource("item");
-                                    String itemLabel = qsWikidata2.getLiteral("itemLabel").getString();
-                                    //bw.write(line +","+ item +"\n");
-                                    bw.write( "<" +wikipedia+"> dis_pwd:sym <" + item + "> .\n"
-                                    		+ "<" +item + "> rdfs:label \"" + itemLabel + "\"@ja .\n") ;
-                                }
-                            }
-                        }*/
-                        
-                	}
+                        // Write to output file
+                        bw.write("<" + dis + "> owl:sameAs <" + disP + "> .\n" +
+                                 "<" + disP + "> owl:sameAs <" + disName + "> .\n" +
+                                 "<" + wikiPage + "> owl:sameAs <" + symName + "> .\n" +
+                                 "<" + disP + "> wikiLink_dbp:sym <" + wikiPage + "> .\n" +
+                                 "<" + disP + "> rdfs:label \"" + disLabel + "\"@ja .\n" +
+                                 "<" + wikiPage + "> rdfs:label \"" + symLabel + "\"@ja .\n");
+                    }
                 }
             }   
          }

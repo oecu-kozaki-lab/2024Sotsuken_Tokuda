@@ -44,7 +44,7 @@ public class 上位クラス_dis {
                                   "?dis rdfs:label ?disLabel ." +
                                   "FILTER (lang(?disLabel) = 'ja') "+
                                   "}"+
-                                  "ORDER BY DESC(?disLabel)" ;     
+                                  "ORDER BY DESC(?dis)" ;     
         
         // Wikidataのクエリの実行
         Query wikidataQuery = QueryFactory.create(wikidataQueryStr);

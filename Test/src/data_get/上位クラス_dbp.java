@@ -28,17 +28,21 @@ public class 上位クラス_dbp {
         BufferedWriter bw = new BufferedWriter(ow);
 
         // WikidataのSPARQLクエリの作成
-        String wikidataQueryStr = "PREFIX wdt: <http://www.wikidata.org/prop/direct/> " +
-        						  "PREFIX schema: <http://schema.org/> " +
-        						  "PREFIX wikibase: <http://wikiba.se/ontology#> " +
-                                  "PREFIX bd: <http://www.bigdata.com/rdf#> " +
-                                  "SELECT DISTINCT ?dis ?disLabel ?wikipedia "+
-                                  "WHERE {" +
-                                  "?dis wdt:P494 ?o ."  +   
-                                  "?wikipedia schema:about ?dis ;" +
-                                  "			  schema:isPartOf <https://ja.wikipedia.org/> ." +
-                                  "SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],ja\". }" +
-                                  "}";     
+        String wikidataQueryStr = "PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> " +
+			  					  "PREFIX wdt: <http://www.wikidata.org/prop/direct/> " +
+			  					  "PREFIX wd: <http://www.wikidata.org/entity/> " +
+			  					  "PREFIX schema: <http://schema.org/> " +
+			  					  "PREFIX bd: <http://www.bigdata.com/rdf#> " +
+			  					  "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+			  					  "SELECT DISTINCT ?dis ?disLabel "+
+			  					  "WHERE {" +
+			  					  "?dis wdt:P494 ?o ."  +       // ?dis（疾患）にP494のプロパティを持つもの
+			  					  "?wikipedia schema:about ?dis ;" +
+			  					  "			  schema:isPartOf <https://ja.wikipedia.org/> ." +
+			  					  "?dis rdfs:label ?disLabel ." +
+			  					  "FILTER (lang(?disLabel) = 'ja') "+
+			  					  "}"+
+			  					  "ORDER BY DESC(?dis)" ;  
         
         // Wikidataのクエリの実行
         Query wikidataQuery = QueryFactory.create(wikidataQueryStr);
@@ -56,17 +60,15 @@ public class 上位クラス_dbp {
             		+ "@prefix dis_e: <https://hozo.jp/dis/entity/> .\n");
             
             while (rsWikidata.hasNext()) {
-                QuerySolution qsWikidata = rsWikidata.next();
-                String wikipedia = qsWikidata.get("wikipedia").toString();
-                wikipedia = URLDecoder.decode(wikipedia, "UTF-8");
-                wikipedia =wikipedia.replace("https://ja.wikipedia.org/wiki/", "http://ja.dbpedia.org/resource/");
-                Resource dis = qsWikidata.getResource("dis");
-                String disURL = dis.toString();
-                String disease =disURL.replace("http://www.wikidata.org/entity/", "https://hozo.jp/dis/disease/");
+            	QuerySolution qsWikidata = rsWikidata.next();
+                String dis = qsWikidata.get("dis").toString();
+                dis = URLDecoder.decode(dis, "UTF-8");
+                String wikipedia = dis.replace("http://www.wikidata.org/entity/", "http://wikidata.dbpedia.org/resource/");
+                /*String disease =dis.replace("http://www.wikidata.org/entity/", "https://hozo.jp/dis/disease/");
                 String dislabel = qsWikidata.getLiteral("disLabel").getString();
-                bw.write ("<" + disease + "> owl:sameAs <" + disURL + "> .\n"
+                bw.write ("<" + disease + "> owl:sameAs <" + dis + "> .\n"
                 		 +"<" +disease+"> rdfs:label \"" + dislabel + "\"@ja .\n");
-                
+                */
                 
                 // DBpediaのクエリの作成
                 String dbpediaQueryStr = "PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> " +
@@ -75,15 +77,17 @@ public class 上位クラス_dbp {
                                          "PREFIX dct:<http://purl.org/dc/terms/> " +
                                          "PREFIX skos:<http://www.w3.org/2004/02/skos/core#> " +
                                          "PREFIX dbpedia-ja:<http://ja.dbpedia.org/resource/> " +
-                                         "SELECT ?wikiPage ?disLabel ?symLabel ?symID ?disID " +
+                                         "SELECT ?dis ?wikiPage ?disLabel ?symLabel ?symID ?disID " +
                                          "WHERE { " +
-                                         "<" + wikipedia + "> dbo:wikiPageWikiLink ?wikiPage . " +
-                                         "<" + wikipedia + "> rdfs:label ?disLabel . " +
+                                         "<" + wikipedia + "> owl:sameAs ?dis ." +
+                                         "FILTER(contains(str(?dis),\"http://ja.dbpedia.org/\"))" +
+                                         "?dis dbo:wikiPageWikiLink ?wikiPage . " +
+                                         "?dis rdfs:label ?disLabel . " +
                                          "FILTER (STRLEN(STR(?disLabel)) > 0)" +
                                          "?wikiPage dct:subject|dct:subject/skos:broader dbpedia-ja:Category:症状と徴候 ."+
                                          "?wikiPage rdfs:label ?symLabel . "+
                                          "?symID owl:sameAs ?wikiPage  ."+
-                                         "?disID owl:sameAs <" + wikipedia + "> ."+
+                                         "?disID owl:sameAs ?dis ."+
                                          "}";
                 
              // DBpediaのクエリの実行
@@ -98,6 +102,7 @@ public class 上位クラス_dbp {
                 	
                 	while (rsDBpedia.hasNext()) {
                         QuerySolution qs = rsDBpedia.next();
+                        Resource disP = qs.getResource("dis");
                         Resource wikiPage = qs.getResource("wikiPage");
                         Resource symID = qs.getResource("symID");
                         Resource disID = qs.getResource("disID");
@@ -108,7 +113,7 @@ public class 上位クラス_dbp {
                         String symUri = symID.toString();
                         String symName = symUri.replace("http://wikidata.dbpedia.org/resource/", "https://hozo.jp/dis/symptom/");
                         
-                        bw.write("<" + disName + "> owl:sameAs <" + wikipedia + "> .\n"
+                        bw.write("<" + disName + "> owl:sameAs <" + disP + "> .\n"
                         		+ "<" + symName + "> owl:sameAs <" + wikiPage + "> .\n"
                         		+ "<" +disName+"> dis_p:sym <" +symName + "> .\n" 
                         		+"<" +disName+"> rdf:type dis_e:dis .\n"

@@ -1,0 +1,13 @@
+Disease, SymptomsCount
+http://ja.dbpedia.org/resource/新型コロナウイルス感染症_(2019年), 4
+http://ja.dbpedia.org/resource/腸チフス, 5
+http://ja.dbpedia.org/resource/カンピロバクター症, 3
+http://ja.dbpedia.org/resource/産科瘻孔, 1
+http://ja.dbpedia.org/resource/石綿症, 3
+http://ja.dbpedia.org/resource/妊娠悪阻, 4
+http://ja.dbpedia.org/resource/異性装フェティシズム, 1
+http://ja.dbpedia.org/resource/低マグネシウム血症, 4
+http://ja.dbpedia.org/resource/反射性失神, 2
+http://ja.dbpedia.org/resource/腺ペスト, 3
+http://ja.dbpedia.org/resource/赤痢, 3
+http://ja.dbpedia.org/resource/腸結核, 3
