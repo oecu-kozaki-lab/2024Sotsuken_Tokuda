@@ -2,48 +2,42 @@
 <html lang="ja">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<script src="parseText.js" defer></script>
-	<script src="sparql.js" defer></script>
-	<link rel="stylesheet" href="style.css">
-	<title>SPARQL Sample</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="parseText.js" defer></script>
+    <script src="sparql.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <title>自覚症状から疾患推測システム</title>
 </head>
 
 <body>
-	<header>
-		<h1>SPARQLによるQAサンプル(1)</h2>
-	</header>
+    <header>
+        <h1>自覚症状から疾患推測システムの構築</h1>
+    </header>
 
-	<div class="container">
-		<div class="center-item">
-			<label>SPARQLエンドポイント：<input type="text" id="endpoint" size="60" value="https://lod.hozo.jp/kz-fuseki/dis/sparql"></label>
-		</div>
-		<div class="center-item">
-			<label>自覚症状を入力してください。<input type="text" id="INPUT" size="20" value="鼻血"></label>
-		</div>
-		<div class="center-item" >
-			<textarea id="query_area" cols="60" rows="10">
-PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-PREFIX dis_p: <https://hozo.jp/dis/prop/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    <div class="container">
+        <!-- 症状入力欄 -->
+        <div class="center-item">
+            <label for="INPUT">症状を入力してください:</label>
+            <input type="text" id="INPUT" size="20" value="鼻血" placeholder="例: 鼻血">
+        </div>
 
-SELECT DISTINCT ?s ?sLabel 
-WHERE {
- ?s dis_p:sym ?o .
- ?o rdfs:label "#INPUT#"@ja .
- ?s rdfs:label ?sLabel .
-}
-</textarea>
-		</div>
-		<div class="center-item">
-			<button id="send">Query</button>
-		</div>
-	</div>
+        <!-- 検索ボタン -->
+        <div class="center-item">
+            <button id="send">検索</button>
+        </div>
+    </div>
 
-	<!-- 結果ペイン -->
+    <!-- 疾患リストと症状ボタンエリアを横並びに表示 -->
+    <div class="result-and-buttons">
+        <div id="result_div"></div> <!-- 疾患リスト表示エリア -->
+        <div id="symptom_area"></div> <!-- 症状ボタン表示エリア -->
+    </div>
+</body>
+
+</html>
+
 	<div id="result_div" class="container"></div>
 </body>
 
