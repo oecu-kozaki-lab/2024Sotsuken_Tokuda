@@ -1,195 +1,188 @@
 window.addEventListener('load', () => {
-	const endpoint = "https://lod.hozo.jp/kz-fuseki/dis/sparql";
-	const defaultQuery = "select * {?s ?p ?o} LIMIT 100";
+    const endpoint = "https://lod.hozo.jp/kz-fuseki/dis/sparql";
 
-	const textArea = document.getElementById('query_area');
-textArea.hidden;
+    const sendButton = document.getElementById('send');
+    const resultArea = document.getElementById('result_div');
+    const symptomArea = document.getElementById('symptom_area');
+    const historyStack = []; // 履歴を保存するスタック
 
-	const sendButton = document.getElementById('send');
-	const resultArea = document.getElementById('result_div');
+    let filteredDiseases = []; // 現在の疾患候補
+    let usedSymptoms = []; // 使用された症状
 
-	// デフォルトのクエリを設定
-	//textArea.value = defaultQuery;
-	//textArea.replace( '#FILM#', textFILM );
-	sendButton.addEventListener('click', async () => {
-		var textINPUT = document.getElementById('INPUT').value;
-		var textPROP ="";
-		if(document.getElementById('propList')!=null){
-			textPROP = document.getElementById('propList').value;
-			}
-				
-		removeAllChild(resultArea);
-		const query = textArea.value
-			.replace( 'where', ' where' )
-			.replace( 'Where', ' where' )
-			.replace( '#INPUT#', textINPUT )
-			.replace( '#PROP#', textPROP )
-			.trim()
-			.replace(/^\s+/g, '')
-			.replace(/\s+$/g, '')
-			.replace(/\n/g, '');
+    // 「戻る」ボタンの設定
+    const backButton = document.createElement('button');
+    backButton.textContent = "戻る";
+    backButton.style.display = "none"; // 履歴がない場合は非表示
+    backButton.onclick = () => {
+        if (historyStack.length > 0) {
+            const previousState = historyStack.pop(); // 履歴から状態を取得
+            filteredDiseases = previousState.filteredDiseases;
+            usedSymptoms = previousState.usedSymptoms;
+            updateUI(previousState); // UIを更新
 
-		try {
-			const result = await sendQuery(endpoint, query);
-			if (!result.ok) {
-				resultArea.innerText = "クエリが正しくないか、サーバ側がおかしいみたいです";
-				return;
-			}
-		
-			const resultData = await result.json();	
-			const vars = resultData.head.vars;
-			const data = resultData.results.bindings
+            // 履歴がなくなったら戻るボタンを非表示
+            if (historyStack.length === 0) {
+                backButton.style.display = "none";
+            }
+        }
+    };
+    document.body.appendChild(backButton);
 
-		//結果を複数表示したいときにも対応
-			const mes = document.createElement('div');
-			var i=0;
-			var len = data.length;
-			var mesText = "" ;
-			while(i < len){
-				var p = document.createElement('p');
-				if(data[i]['sLabel']!=null){
-					p.textContent = data[i]['sLabel'].value;
-					mes.appendChild( p );
-				}
-				i++;
-				
-			}
-			var p_end = document.createElement('p');
-			p_end.textContent = 'の可能性があります。';
-			mes.appendChild( p_end );
-			resultArea.appendChild(mes);
-/*
-			const headers = tableHead(vars);
-			const rows = data
-				.map(Object.values)
-				.map(tableRows)
-				.reduce((acc, elem) => {
-					acc.appendChild(elem);
-					return acc;
-				}, document.createDocumentFragment())
+    sendButton.addEventListener('click', async () => {
+        const initialSymptom = document.getElementById('INPUT').value;
+        usedSymptoms.push(initialSymptom);
 
-			const table = document.createElement('table');
-			table.appendChild(headers);
-			table.appendChild(rows);
-			resultArea.appendChild(table);*/
-		} catch (e) {
-			resultArea.innerHTML = e.message;
-			throw e;
-		}
-	}, false);
-}, false);
+        // SPARQLクエリ
+        const query = `
+        PREFIX dis_p: <https://hozo.jp/dis/prop/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT DISTINCT ?s ?sLabel
+        WHERE {
+            ?s dis_p:sym ?o .
+            ?o rdfs:label "${initialSymptom}"@ja .
+            ?s rdfs:label ?sLabel .
+        }`;
 
-/**
- * endpointに指定されたSPARQLエンドポイントにリクエストを投げる
- * @param {string} endpoint 
- * @param {string} sparql 
- * 
- * @returns {Promise<Response>}
- */
-function sendQuery(endpoint, sparql) {
-	if (!endpoint || !sparql) {
-		throw new Error("urlとqueryは必須です");
-	}
+        // 結果をクリア
+        clearElement(resultArea);
+        clearElement(symptomArea);
 
-	const requestParam = {
-		query: sparql,
-		output: "json"
-	};
-	const url = endpoint + "?" + buildParam(requestParam);
+        try {
+            const result = await sendQuery(endpoint, query);
+            if (!result.ok) {
+                resultArea.innerText = "クエリが失敗しました。";
+                return;
+            }
 
-	const headers = {
-		Accept: 'application/sparql-results+json'
-	}
-	return fetch(url, {
-		method: 'GET',
-		headers,
-		mode: 'cors',
-		cache: 'no-cache',
-	});
-}
+            const resultData = await result.json();
+            filteredDiseases = mergeDiseasesByUri(resultData.results.bindings);
 
-/**
- * URLのクエリパラメータを生成する関数
- * @param {Object<string, string>} obj 
- * 
- * @returns {string}
- */
-function buildParam(obj) {
-	return Object.keys(obj)
-		.map(k => encodeURIComponent(k) + "=" + encodeURIComponent(obj[k]))
-		.join('&');
-}
+            saveCurrentState(); // 状態を履歴に保存
+            updateUI({ filteredDiseases, usedSymptoms });
+        } catch (error) {
+            resultArea.innerHTML = error.message;
+        }
+    });
 
-/**
- * <table>のヘッダー部分(<th>)を生成する
- * @param {Array<string>} vars 
- * @returns {HTMLTableRowElement}
- */
-function tableHead(vars) {
-	const tr = document.createElement('tr');
-	const fragment = vars.map(v => {
-		const th = document.createElement('th');
-		th.innerText = v;
-		return th;
-	}).reduce((acc, th) => {
-		acc.appendChild(th);
-		return acc;
-	}, document.createDocumentFragment());
+    // 状態を保存する関数
+    function saveCurrentState() {
+        historyStack.push({
+            filteredDiseases: [...filteredDiseases], // 深いコピー
+            usedSymptoms: [...usedSymptoms],
+        });
+        backButton.style.display = "block"; // 戻るボタンを表示
+    }
 
-	tr.appendChild(fragment);
-	return tr;
-}
+    // UIを更新する関数
+    function updateUI(state) {
+        displayDiseases(state.filteredDiseases);
 
-/**
- * <table>の行を生成する
- * @param {Array<String>} values 
- * @returns {HTMLTableRowElement}
- */
-function tableRows(values) {
-	const tr = document.createElement('tr');
-	const fragment = values.map(tableDataCell)
-		.reduce((acc, td) => {
-			acc.appendChild(td);
-			return acc;
-		}, document.createDocumentFragment());
+        // 症状ボタンを更新
+        if (state.filteredDiseases.length === 1) {
+            clearElement(symptomArea); // 疾患が1つになったら症状ボタンをクリア
+        } else {
+            showSymptomsForDiseases(state.filteredDiseases, state.usedSymptoms);
+        }
+    }
 
-	tr.appendChild(fragment);
-	return tr;
-}
+    // 疾患候補を表示する関数
+    function displayDiseases(diseases) {
+        clearElement(resultArea);
 
-/**
- * SPARQLエンドポイントからのレスポンスを読んで、
- * URIならリンク、リテラルならテキストのエレメントを返す
- * 
- * @param {Object<String, String>} obj 
- * @returns {HTMLTableDataCellElement}
- */
-function tableDataCell(obj) {
-	const td = document.createElement('td');
-	switch (obj['type']) {
-		case "literal":
-			td.innerText = obj.value;
-			break;
-		case "uri":
-			const aTag = document.createElement('a');
-			aTag.href = obj.value;
-			aTag.innerText = obj.value;
-			td.appendChild(aTag);
-			break
-		default:
-			throw new Error("不明なノードタイプです");
-	}
-	td.classList.add('result-item');
-	return td;
-}
+        const diseaseList = document.createElement('ul');
+        diseases.forEach(disease => {
+            const listItem = document.createElement('li');
+            listItem.textContent = disease.label;
+            diseaseList.appendChild(listItem);
+        });
 
-/**
- * 子ノードをすべて削除する
- * @param {HTMLElement} elem 
- */
-function removeAllChild(elem) {
-	let child = null;
-	while (child = elem.firstChild) {
-		elem.removeChild(child);
-	}
-}
+        resultArea.appendChild(diseaseList);
+    }
+
+    // 症状ボタンを表示する関数
+    async function showSymptomsForDiseases(diseases, usedSymptoms) {
+        const symptomsMap = new Map();
+
+        for (const disease of diseases) {
+            const query = `
+            PREFIX dis_p: <https://hozo.jp/dis/prop/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT DISTINCT ?symptom ?symptomLabel
+            WHERE {
+                <${disease.uri}> dis_p:sym ?symptom .
+                ?symptom rdfs:label ?symptomLabel .
+            }`;
+
+            try {
+                const result = await sendQuery(endpoint, query);
+                if (!result.ok) continue;
+
+                const resultData = await result.json();
+                resultData.results.bindings.forEach(item => {
+                    const symptomLabel = item['symptomLabel'].value;
+                    if (!usedSymptoms.includes(symptomLabel)) {
+                        if (!symptomsMap.has(symptomLabel)) {
+                            symptomsMap.set(symptomLabel, []);
+                        }
+                        symptomsMap.get(symptomLabel).push(disease.label);
+                    }
+                });
+            } catch (error) {
+                console.error("症状取得エラー:", error);
+            }
+        }
+
+        clearElement(symptomArea);
+
+        symptomsMap.forEach((_, symptom) => {
+            const button = document.createElement('button');
+            button.textContent = symptom;
+            button.className = 'symptom-button';
+            button.onclick = () => {
+                saveCurrentState(); // 状態を保存
+                usedSymptoms.push(symptom);
+
+                const nextDiseases = filteredDiseases.filter(disease =>
+                    symptomsMap.get(symptom).includes(disease.label)
+                );
+                filteredDiseases = nextDiseases;
+
+                updateUI({ filteredDiseases, usedSymptoms });
+            };
+            symptomArea.appendChild(button);
+        });
+    }
+
+    // 疾患ラベルを統合する関数
+    function mergeDiseasesByUri(bindings) {
+        const merged = new Map();
+
+        bindings.forEach(item => {
+            const uri = item['s'].value;
+            const label = item['sLabel'].value;
+
+            if (!merged.has(uri)) {
+                merged.set(uri, { uri, labels: [] });
+            }
+            merged.get(uri).labels.push(label);
+        });
+
+        return Array.from(merged.values()).map(disease => ({
+            uri: disease.uri,
+            label: disease.labels.join(', '),
+        }));
+    }
+
+    // 要素をクリアする関数
+    function clearElement(element) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+
+    // SPARQLクエリを送信する関数
+    async function sendQuery(endpoint, query) {
+        const response = await fetch(`${endpoint}?${new URLSearchParams({ query, output: 'json' })}`);
+        return response;
+    }
+});
