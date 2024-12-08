@@ -34,9 +34,9 @@ window.addEventListener('load', () => {
 
         // SPARQLクエリ
         const query = `
-        PREFIX dis_p: <https://hozo.jp/dis/prop/>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT DISTINCT ?s ?sLabel
+        PREFIX dis_p: <https://hozo.jp/dis/prop/> 
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+        SELECT DISTINCT ?s ?sLabel 
         WHERE {
             ?s dis_p:sym ?o .
             ?o rdfs:label "${initialSymptom}"@ja .
@@ -105,9 +105,9 @@ window.addEventListener('load', () => {
 
         for (const disease of diseases) {
             const query = `
-            PREFIX dis_p: <https://hozo.jp/dis/prop/>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT ?symptom ?symptomLabel
+            PREFIX dis_p: <https://hozo.jp/dis/prop/> 
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+            SELECT DISTINCT ?symptom ?symptomLabel 
             WHERE {
                 <${disease.uri}> dis_p:sym ?symptom .
                 ?symptom rdfs:label ?symptomLabel .
