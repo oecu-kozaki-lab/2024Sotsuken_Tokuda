@@ -4,46 +4,66 @@ window.addEventListener('load', () => {
     const sendButton = document.getElementById('send');
     const resultArea = document.getElementById('result_div');
     const symptomArea = document.getElementById('symptom_area');
-    const historyStack = []; // 履歴を保存するスタック
+    const symptomDisplayArea = document.createElement('div'); // 症状表示エリア
+    symptomDisplayArea.id = "symptom_display_area";
+    document.body.insertBefore(symptomDisplayArea, resultArea.parentElement);
 
     let filteredDiseases = []; // 現在の疾患候補
     let usedSymptoms = []; // 使用された症状
 
-    // 「戻る」ボタンの設定
-    const backButton = document.createElement('button');
-    backButton.textContent = "戻る";
-    backButton.style.display = "none"; // 履歴がない場合は非表示
-    backButton.onclick = () => {
-        if (historyStack.length > 0) {
-            const previousState = historyStack.pop(); // 履歴から状態を取得
-            filteredDiseases = previousState.filteredDiseases;
-            usedSymptoms = previousState.usedSymptoms;
-            updateUI(previousState); // UIを更新
-
-            // 履歴がなくなったら戻るボタンを非表示
-            if (historyStack.length === 0) {
-                backButton.style.display = "none";
-            }
-        }
-    };
-    document.body.appendChild(backButton);
-
     sendButton.addEventListener('click', async () => {
-        const initialSymptom = document.getElementById('INPUT').value;
-        usedSymptoms.push(initialSymptom);
+        const initialSymptom = document.getElementById('INPUT').value.trim();
+        if (initialSymptom && !usedSymptoms.includes(initialSymptom)) {
+            addSymptom(initialSymptom); // 入力症状を表示
+            usedSymptoms.push(initialSymptom);
+            await updateDiseasesAndSymptoms();
+        }
+    });
 
-        // SPARQLクエリ
+    // 症状を追加して表示する関数
+    function addSymptom(symptom) {
+        const symptomItem = document.createElement('div');
+        symptomItem.textContent = symptom;
+
+        // 取り消しボタンを追加
+        const removeButton = document.createElement('button');
+        removeButton.textContent = "取り消し";
+        removeButton.onclick = async () => {
+            usedSymptoms = usedSymptoms.filter(s => s !== symptom); // 症状を削除
+            symptomDisplayArea.removeChild(symptomItem);
+            await updateDiseasesAndSymptoms(); // 状態を更新
+        };
+
+        symptomItem.appendChild(removeButton);
+        symptomDisplayArea.appendChild(symptomItem);
+    }
+
+    // 疾患と症状ボタンを更新する関数
+    async function updateDiseasesAndSymptoms() {
+        if (usedSymptoms.length === 0) {
+            // 全ての症状が取り消された場合、リセット
+            clearElement(resultArea);
+            clearElement(symptomArea);
+            filteredDiseases = [];
+            return;
+        }
+
+        // AND条件のクエリを動的に構築
+        const symptomConditions = usedSymptoms.map((symptom, index) => `
+            ?s dis_p:sym ?o${index} .
+            ?o${index} rdfs:label "${symptom}"@ja .
+        `).join('\n');
+
         const query = `
-        PREFIX dis_p: <https://hozo.jp/dis/prop/> 
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-        SELECT DISTINCT ?s ?sLabel 
-        WHERE {
-            ?s dis_p:sym ?o .
-            ?o rdfs:label "${initialSymptom}"@ja .
-            ?s rdfs:label ?sLabel .
-        }`;
+            PREFIX dis_p: <https://hozo.jp/dis/prop/> 
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+            SELECT DISTINCT ?s ?sLabel 
+            WHERE { 
+                ${symptomConditions} 
+                ?s rdfs:label ?sLabel . 
+            }
+        `;
 
-        // 結果をクリア
         clearElement(resultArea);
         clearElement(symptomArea);
 
@@ -57,31 +77,12 @@ window.addEventListener('load', () => {
             const resultData = await result.json();
             filteredDiseases = mergeDiseasesByUri(resultData.results.bindings);
 
-            saveCurrentState(); // 状態を履歴に保存
-            updateUI({ filteredDiseases, usedSymptoms });
+            displayDiseases(filteredDiseases);
+            if (filteredDiseases.length > 1) {
+                await showSymptomsForDiseases(filteredDiseases, usedSymptoms);
+            }
         } catch (error) {
             resultArea.innerHTML = error.message;
-        }
-    });
-
-    // 状態を保存する関数
-    function saveCurrentState() {
-        historyStack.push({
-            filteredDiseases: [...filteredDiseases], // 深いコピー
-            usedSymptoms: [...usedSymptoms],
-        });
-        backButton.style.display = "block"; // 戻るボタンを表示
-    }
-
-    // UIを更新する関数
-    function updateUI(state) {
-        displayDiseases(state.filteredDiseases);
-
-        // 症状ボタンを更新
-        if (state.filteredDiseases.length === 1) {
-            clearElement(symptomArea); // 疾患が1つになったら症状ボタンをクリア
-        } else {
-            showSymptomsForDiseases(state.filteredDiseases, state.usedSymptoms);
         }
     }
 
@@ -108,9 +109,9 @@ window.addEventListener('load', () => {
             PREFIX dis_p: <https://hozo.jp/dis/prop/> 
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
             SELECT DISTINCT ?symptom ?symptomLabel 
-            WHERE {
-                <${disease.uri}> dis_p:sym ?symptom .
-                ?symptom rdfs:label ?symptomLabel .
+            WHERE { 
+                <${disease.uri}> dis_p:sym ?symptom . 
+                ?symptom rdfs:label ?symptomLabel . 
             }`;
 
             try {
@@ -138,16 +139,12 @@ window.addEventListener('load', () => {
             const button = document.createElement('button');
             button.textContent = symptom;
             button.className = 'symptom-button';
-            button.onclick = () => {
-                saveCurrentState(); // 状態を保存
-                usedSymptoms.push(symptom);
-
-                const nextDiseases = filteredDiseases.filter(disease =>
-                    symptomsMap.get(symptom).includes(disease.label)
-                );
-                filteredDiseases = nextDiseases;
-
-                updateUI({ filteredDiseases, usedSymptoms });
+            button.onclick = async () => {
+                if (!usedSymptoms.includes(symptom)) {
+                    addSymptom(symptom); // ボタンで選択した症状を表示
+                    usedSymptoms.push(symptom);
+                    await updateDiseasesAndSymptoms(); // 状態を更新
+                }
             };
             symptomArea.appendChild(button);
         });
