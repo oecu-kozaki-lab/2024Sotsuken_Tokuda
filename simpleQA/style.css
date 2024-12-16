@@ -90,7 +90,7 @@ button#send:hover {
 button {
     display: inline-block;
     margin: 5px;
-    padding: 10px 20px;
+    padding: 8px 15px;
     border: 1px solid #ddd;
     background-color: #007BFF;
     color: #fff;
@@ -103,6 +103,36 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+#symptom_display_area button {
+    font-size: 12px; /* 取り消しボタンのサイズを小さくする */
+    padding: 5px 10px; /* 取り消しボタンの余白を調整 */
+    background-color: #007BFF; /* 色を少し薄く */
+    border: 1px solid #ccc; /* ボーダーを調整 */
+    border-radius: 3px; /* 角を少し丸める */
+    cursor: pointer;
+}
+
+#symptom_display_area button:hover {
+    background-color: #0056b3; /* ホバー時の背景色 */
+}
+
+
+
+#symptom_display_area {
+    margin:6px auto;
+    padding: 6px;
+    width: 20%; /* エリア幅を指定 */
+    text-align: left; /* 左揃え */
+    background-color: #f9f9f9; /* 背景色を適用 */
+    border: 1px solid #ddd; /* ボーダーを追加 */
+    border-radius: 5px; /* 角を丸める */
+    position: relative; /* 位置調整のための設定 */
+    bottom: 10px;
+    /*left: 10%; /* 左から10%分ずらして中央に近づける */
+}
+
+
 
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
